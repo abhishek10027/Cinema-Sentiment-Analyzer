@@ -132,7 +132,7 @@
                     'sentence': sentence
                 };
                 $.ajax({
-                    type: 'POST',
+                    type: 'POST',  // Ensure this is POST
                     url: '/predict',
                     data: formData,
                     dataType: 'json',
