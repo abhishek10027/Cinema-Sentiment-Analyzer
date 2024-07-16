@@ -5,115 +5,68 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cinema Sentiment Analyzer</title>
     <style>
-        /* Base styles */
         body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
             margin: 0;
             padding: 0;
-            font-family: Arial, sans-serif;
-            background-color: hsl(233, 41%, 61%); /* 🎨 Light blue */
         }
-
-        header {
-            background-color: #ffffff; /* 🎨 White */
-            padding: 20px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-
         .container {
             max-width: 800px;
-            margin: 0 auto;
+            margin: 20px auto;
+            background-color: #fff;
             padding: 20px;
-        }
-
-        .description {
-            margin-bottom: 20px;
-            font-weight: bold; /* Make description bold */
-        }
-
-        .btn {
-            width: 100%;
-            padding: 10px;
-            background-color: #2980b9; /* 🎨 Blue */
-            color: #fff; /* 🎨 White */
-            border: 2px solid #2980b9; /* 🎨 Blue */
             border-radius: 5px;
-            cursor: pointer;
-            font-size: 1.2rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-
-        /* Form styles */
-        form {
-            padding: 20px;
-            border: 2px solid #ccc; /* 🎨 Light gray */
-            border-radius: 10px;
-            background-color: rgba(255, 255, 255, 0.8); /* 🎨 Translucent white */
-        }
-
         .form-group {
             margin-bottom: 20px;
         }
-
         .form-control {
             width: 100%;
             padding: 10px;
-            font-size: 1.2rem;
-            border: 1px solid #ccc; /* 🎨 Light gray */
+            font-size: 1rem;
+            border: 1px solid #ccc;
             border-radius: 5px;
             box-sizing: border-box;
         }
-
-        .alert {
-            margin-top: 20px;
+        .btn {
+            width: 100%;
             padding: 10px;
-            background-color: #f8d7da; /* 🎨 Light red */
-            border-color: #f5c6cb; /* 🎨 Pink */
-            color: #721c24; /* 🎨 Dark red */
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .alert {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
             border-radius: 5px;
         }
-
         .result-container {
             text-align: center;
-            background-color: #df1c36; /* 🎨 Red */
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            max-width: 800px;
-            width: 90%;
-            margin: auto;
-        }
-
-        .result-container h1 {
-            color: #fff; /* 🎨 White */
-            margin-bottom: 20px;
-        }
-
-        .result-container h2 {
-            color: #3498db; /* 🎨 Blue */
-            margin-bottom: 40px;
-        }
-
-        .result {
-            color: #fff; /* 🎨 White */
-            font-size: 1.2em;
-            margin-bottom: 20px;
-        }
-
-        .note-section {
-            background-color: #f3f3f3; /* 🎨 Light gray */
+            background-color: #dff0d8;
             border-radius: 5px;
             padding: 20px;
             margin-top: 20px;
-            text-align: left;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-
-        .note-section h3 {
-            color: #333; /* 🎨 Dark gray */
-            margin-bottom: 10px;
+        .result {
+            margin-top: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
         }
-
-        .note-section p {
-            color: #57138f; /* 🎨 Purple */
+        .note-section {
+            margin-top: 20px;
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+            padding: 10px;
+            border-radius: 5px;
         }
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -124,22 +77,22 @@
                 var sentence = $('#sentence').val().trim();
                 if (sentence === '') {
                     $('#warning').html('<div class="alert" role="alert">Please enter your movie review.</div>');
-                    $('#predictionResult').empty().hide(); // Clear and hide any existing prediction result
+                    $('#predictionResult').empty().hide();
                     return;
                 }
-                $('#warning').empty(); // Clear any existing warnings
+                $('#warning').empty();
                 var formData = {
                     'sentence': sentence
                 };
                 $.ajax({
-                    type: 'POST',  // Ensure this is POST
+                    type: 'POST',
                     url: '/predict',
                     data: formData,
                     dataType: 'json',
                     success: function(response) {
                         var predictionText = response.prediction_text;
                         var resultContainer = $('#predictionResult');
-                        resultContainer.html('<div class="result-container"><h1>Prediction Result</h1><div class="result"><h2>' + predictionText + '</h2></div>' + getPredictionMessage(predictionText) + '</div>').show();
+                        resultContainer.html('<div class="result-container"><div class="result">' + predictionText + '</div>' + getPredictionMessage(predictionText) + '</div>').show();
                     },
                     error: function(xhr, status, error) {
                         console.error('Error:', error);
@@ -148,52 +101,30 @@
             });
         });
 
-        // Function to return appropriate message based on prediction
         function getPredictionMessage(prediction) {
             if (prediction === 'Positive review') {
-                return '<div class="note-section"><h3>Note:</h3>' +
-                       '<p>The prediction is made using a Logistic Regression machine learning model. Logistic Regression is a statistical method for analyzing a dataset in which there are one or more independent variables that determine an outcome.</p>' +
-                       '<p>It is commonly used for binary classification problems, such as predicting whether a movie review is positive or negative based on its content and context.</p>' +
-                       '<p>For this Cinema Sentiment Analyzer, the Logistic Regression model is trained on a dataset containing movie reviews and predicts whether a movie review is positive or not.</p></div>';
+                return '<div class="note-section"><strong>Note:</strong> This is a positive review.</div>';
             } else if (prediction === 'Negative review') {
-                return '<div class="note-section"><h3>Note:</h3>' +
-                       '<p>The prediction is made using a Logistic Regression machine learning model. Logistic Regression is a statistical method for analyzing a dataset in which there are one or more independent variables that determine an outcome.</p>' +
-                       '<p>It is commonly used for binary classification problems, such as predicting whether a movie review is positive or negative based on its content and context.</p>' +
-                       '<p>For this Cinema Sentiment Analyzer, the Logistic Regression model is trained on a dataset containing movie reviews and predicts whether a movie review is positive or not.</p></div>';
+                return '<div class="note-section"><strong>Note:</strong> This is a negative review.</div>';
             } else {
-                return '<div class="note-section"><h3>Note:</h3><p>Prediction result is unclear. Please try again.</p></div>';
+                return '<div class="note-section"><strong>Note:</strong> Prediction result is unclear. Please try again.</div>';
             }
         }
     </script>
 </head>
 <body>
-    <header>
-        <h1>Cinema Sentiment Analyzer</h1>
-    </header>
     <div class="container">
-        <div class="description">
-            <h2>Description of the project</h2>
-            <p>The Cinema Sentiment Analyzer employs machine learning to predict the sentiment of movie reviews based on textual content and context. It integrates Python and Flask for backend development and utilizes HTML, and CSS for frontend implementation. 
-                This system provides accurate sentiment analysis, essential for understanding audience feedback and enhancing movie marketing efforts.
-            </p>
-        </div>
-    </div>
-    
-    <div class="container">
-        <!-- Form for user input -->
+        <h1 style="text-align: center;">Cinema Sentiment Analyzer</h1>
         <form id="sentimentAnalysisForm" class="form-group">
             <div class="form-group">
                 <label for="sentence">Enter your movie review:</label>
-                <textarea class="form-control" name="sentence" rows="4" id="sentence"></textarea>
+                <textarea class="form-control" name="sentence" id="sentence" rows="5" placeholder="Type your movie review here..."></textarea>
             </div>
-            <button type="submit" class="btn btn-primary btn-block">Analyze</button>
+            <button type="submit" class="btn">Analyze</button>
         </form>
-        <!-- Warning message container -->
         <div id="warning"></div>
     </div>
 
-    <div class="container" id="predictionResult" style="display: none;">
-        <!-- Prediction result will be displayed here -->
-    </div>
+    <div id="predictionResult" class="container" style="display: none;"></div>
 </body>
 </html>
