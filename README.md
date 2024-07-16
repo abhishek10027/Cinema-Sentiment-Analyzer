@@ -27,19 +27,15 @@ The accuracy of each model is calculated on the test dataset, and the Naive Baye
 
 1. **Open the application in a web browser.**
 
-  ![image](https://github.com/user-attachments/assets/1262e302-cff1-4848-98b3-bfc1bf3ec078)
+   ![image](https://github.com/user-attachments/assets/1095f7b8-65b2-435e-b8ec-702efbea61d1)
 
+2. **Fill out the form with the movie review text.**
 
-2. **Click on the "Let's Predict" button to input your movie review.**
+   ![image](https://github.com/user-attachments/assets/798d5a21-f321-4240-99ba-3b4b79b7b2f8)
 
-   ![image](https://github.com/user-attachments/assets/e6cdf02d-8a0f-473f-9574-a651089c511a)
+3. **Click the "Analyze" button to generate the sentiment prediction.**
 
-
-3. **Fill out the form with the movie review text.**
-
-4. **Click the "Analyze" button to generate the sentiment prediction.**
-
-5. **View the prediction result to see the sentiment of the movie review.**
+4. **View the prediction result to see the sentiment of the movie review.**
 
    ![image](https://github.com/user-attachments/assets/65e8522a-c024-482b-b58c-4c60fdecd42f)
 
