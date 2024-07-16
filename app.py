@@ -11,7 +11,7 @@ model_s = pickle.load(open('logistic_model.pkl', 'rb'))
 # Serve the static HTML file
 @app.route('/')
 def home():
-    return send_from_directory('.', 'index.html')
+    return send_from_directory('index.html')
 
 # Define the route for processing sentiment analysis
 @app.route('/api/predict', methods=['POST'])
