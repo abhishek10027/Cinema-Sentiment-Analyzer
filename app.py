@@ -1,7 +1,9 @@
 from flask import Flask, request, jsonify, send_from_directory
+from flask_cors import CORS
 import pickle
 
 app = Flask(__name__)
+CORS(app)
 
 # Load the CountVectorizer and model
 save_cv = pickle.load(open('count_vectorizer.pkl', 'rb'))
@@ -15,11 +17,14 @@ def home():
 # Define the route for processing sentiment analysis
 @app.route('/predict', methods=['POST'])
 def predict():
-    sentence = request.form['sentence']
-    sen = save_cv.transform([sentence]).toarray()
-    res = model_s.predict(sen)[0]
-    prediction_text = 'Positive review' if res == 1 else 'Negative review'
-    return jsonify({'prediction_text': prediction_text})
+    try:
+        sentence = request.form['sentence']
+        sen = save_cv.transform([sentence]).toarray()
+        res = model_s.predict(sen)[0]
+        prediction_text = 'Positive review' if res == 1 else 'Negative review'
+        return jsonify({'prediction_text': prediction_text}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
