@@ -1,32 +1,38 @@
-from flask import Flask, request, jsonify, send_from_directory
-import os
+from flask import Flask, request, jsonify, render_template
 import pickle
 
 app = Flask(__name__)
 
-# Load the CountVectorizer and model
-count_vectorizer_path = os.path.join(os.getcwd(), 'count_vectorizer.pkl')
-logistic_model_path = os.path.join(os.getcwd(), 'logistic_model.pkl')
+# Load the CountVectorizer and model (example)
+save_cv = pickle.load(open('count_vectorizer.pkl', 'rb'))  # Load your CountVectorizer model
+model_s = pickle.load(open('logistic_model.pkl', 'rb'))  # Load your Logistic Regression model
 
-with open(count_vectorizer_path, 'rb') as f:
-    save_cv = pickle.load(f)
-
-with open(logistic_model_path, 'rb') as f:
-    model_s = pickle.load(f)
-
-# Serve the static HTML file
+# Serve the index.html file
 @app.route('/')
 def home():
-    return send_from_directory(os.getcwd(), 'index.html')
+    return render_template('index.html')
 
-# Define the route for processing sentiment analysis
+# Define the route for handling POST requests to /predict
 @app.route('/predict', methods=['POST'])
 def predict():
-    sentence = request.form['sentence']
-    sen = save_cv.transform([sentence]).toarray()
-    res = model_s.predict(sen)[0]
-    prediction_text = 'Positive review' if res == 1 else 'Negative review'
-    return jsonify({'prediction_text': prediction_text})
+    try:
+        # Get the sentence from the POST request data
+        sentence = request.form['sentence']
+
+        # Transform the sentence using the CountVectorizer
+        sen = save_cv.transform([sentence]).toarray()
+
+        # Predict using the loaded model
+        prediction = model_s.predict(sen)[0]
+
+        # Determine prediction text based on the model's prediction
+        prediction_text = 'Positive review' if prediction == 1 else 'Negative review'
+
+        # Return prediction result as JSON response
+        return jsonify({'prediction_text': prediction_text})
+
+    except Exception as e:
+        return jsonify({'error': str(e)})
 
 if __name__ == '__main__':
     app.run(debug=True)
