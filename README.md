@@ -36,8 +36,8 @@ The accuracy of each model is calculated on the test dataset, and the Naive Baye
 3. **Click the "Analyze" button to generate the sentiment prediction.**
 
 4. **View the prediction result to see the sentiment of the movie review.**
+![image](https://github.com/user-attachments/assets/89a619fd-af5a-4c74-a5d6-c4400a994038)
 
-   ![image](https://github.com/user-attachments/assets/65e8522a-c024-482b-b58c-4c60fdecd42f)
 
 
 ## Dependencies
