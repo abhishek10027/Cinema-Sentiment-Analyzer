@@ -1,29 +1,31 @@
-from flask import Flask, request, jsonify, send_file
+from flask import Flask, request, jsonify, render_template
 import pickle
+import numpy as np
+
+# Load the CountVectorizer and Logistic Regression model
+with open('count_vectorizer.pkl', 'rb') as cv_file:
+    save_cv = pickle.load(cv_file)
+with open('logistic_model.pkl', 'rb') as model_file:
+    model_s = pickle.load(model_file)
 
 app = Flask(__name__)
 
-# Load the CountVectorizer and model
-save_cv = pickle.load(open('count_vectorizer.pkl', 'rb'))
-model_s = pickle.load(open('logistic_model.pkl', 'rb'))
-
-# Define route to serve your HTML file
 @app.route('/')
 def home():
-    return send_file('index.html')
+    return render_template('index.html')
 
-
-# Define the route for processing sentiment analysis
 @app.route('/predict', methods=['POST'])
 def predict():
+    # Extract data from form
     sentence = request.form['sentence']
-    sen = save_cv.transform([sentence]).toarray()
-    res = model_s.predict(sen)[0]
-    if res == 1:
-        prediction_text = 'Positive review'
-    else:
-        prediction_text = 'Negative review'
-    return jsonify({'prediction_text': prediction_text})
+    transformed_input = save_cv.transform([sentence]).toarray()
 
-if __name__ == '__main__':
+    # Make prediction
+    prediction = model_s.predict(transformed_input)[0]
+    output = 'Positive review' if prediction == 1 else 'Negative review'
+
+    return render_template('index.html', prediction_text='Prediction: {}'.format(output))
+
+if __name__ == "__main__":
     app.run(debug=True)
+
